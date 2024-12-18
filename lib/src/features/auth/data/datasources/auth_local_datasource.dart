@@ -4,7 +4,6 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 sealed class AuthLocalDataSource {
-  Future<bool> checkSignInStatus();
   String? getToken();
   Future<int?> getExpiredAt();
   Future<int?> getRefreshExpiredAt();
@@ -21,28 +20,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     this._secureLocalStorage,
     this._localStorage,
   );
-
-  @override
-  Future<bool> checkSignInStatus() async {
-    try {
-      final refreshExpiredAt =
-          await _secureLocalStorage.load(key: "refresh_expired_at");
-      final expiredAt = _localStorage.getInt("expired_at");
-
-      if (expiredAt != null &&
-          DateTime.now().millisecondsSinceEpoch < expiredAt) {
-        return true;
-      } else if (refreshExpiredAt != null &&
-          DateTime.now().millisecondsSinceEpoch < int.parse(refreshExpiredAt)) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      throw Exception(
-          "Failed to retrieve user sign-in status: ${e.toString()}");
-    }
-  }
 
   @override
   String? getToken() {

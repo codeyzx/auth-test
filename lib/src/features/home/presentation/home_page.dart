@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:first_test/src/core/config/router/app_router.dart';
-import 'package:first_test/src/core/utils/logger.dart';
 import 'package:first_test/src/core/utils/show_snackbar.dart';
 import 'package:first_test/src/features/auth/presentation/bloc/auth/auth_cubit.dart';
 import 'package:first_test/src/features/home/presentation/bloc/home_cubit.dart';

@@ -100,17 +100,27 @@ class AuthRepositoryImpl implements AuthRepository {
     final expiredAt = await _authLocalDataSource.getExpiredAt();
     final refreshExpiredAt = await _authLocalDataSource.getRefreshExpiredAt();
 
+    int currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    // Check if the token is exist
     if (expiredAt == null || refreshExpiredAt == null) {
       return const Left(ServerFailure(message: "User not signed in"));
+    } else if (expiredAt < currentTime && refreshExpiredAt > currentTime) {
+      // Token has expired, but refresh token is still valid
+      logger
+          .i('Token expired, but refresh token is still valid. Refreshing...');
+
+      return await checkRefreshToken();
+    } else if (expiredAt > currentTime) {
+      logger.i('Token is still valid');
+      return Right(null);
     } else {
-      if (expiredAt < refreshExpiredAt) {
-        return await checkRefreshToken();
-      } else {
-        await _authLocalDataSource.clearLocal();
-        return Left(
-          ServerFailure(message: 'Session expired. Please login again.'),
-        );
-      }
+      // Both token and refresh token are expired
+      logger.i('Token and refresh token are both expired');
+      await _authLocalDataSource.clearLocal();
+      return Left(
+        ServerFailure(message: 'Session expired. Please login again.'),
+      );
     }
   }
 
