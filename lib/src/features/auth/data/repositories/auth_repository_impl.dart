@@ -78,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   Future<Either<Failure, void>> checkRefreshToken() async {
     try {
-      final refreshToken = _authLocalDataSource.getToken();
+      final refreshToken = await _authLocalDataSource.getRefreshToken();
       if (refreshToken == null) {
         return const Left(ServerFailure(message: "User not signed in"));
       }
@@ -125,13 +125,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  // getToken
-  Future<Either<Failure, String>> getToken() async {
+  Future<Either<Failure, String?>> getToken() async {
     final token = _authLocalDataSource.getToken();
-    if (token == null) {
-      return const Left(ServerFailure(message: "User not signed in"));
-    } else {
-      return Right(token);
-    }
+    return Right(token);
   }
 }

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 sealed class AuthLocalDataSource {
   String? getToken();
+  Future<String?> getRefreshToken();
   Future<int?> getExpiredAt();
   Future<int?> getRefreshExpiredAt();
   Future<void> saveLocal(AuthModel result);
@@ -20,6 +21,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     this._secureLocalStorage,
     this._localStorage,
   );
+
+  @override
+  Future<String?> getRefreshToken() async {
+    return await _secureLocalStorage.load(key: "refresh_token");
+  }
 
   @override
   String? getToken() {

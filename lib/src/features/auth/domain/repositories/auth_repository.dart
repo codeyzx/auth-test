@@ -10,5 +10,5 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, bool>> register(RegisterParams params);
   Future<Either<Failure, void>> hasExpiredToken();
-  Future<Either<Failure, String>> getToken();
+  Future<Either<Failure, String?>> getToken();
 }

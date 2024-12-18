@@ -5,12 +5,12 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
-class GetTokenUseCase implements UseCase<String, NoParams> {
+class GetTokenUseCase implements UseCase<String?, NoParams> {
   final AuthRepository _authRepository;
   const GetTokenUseCase(this._authRepository);
 
   @override
-  Future<Either<Failure, String>> call(NoParams params) async {
+  Future<Either<Failure, String?>> call(NoParams params) async {
     try {
       final result = await _authRepository.getToken();
       return result;
